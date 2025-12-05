@@ -1,0 +1,193 @@
+<h2>Reglas Apriori runssss</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script
+    type="text/javascript"
+    src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"
+></script>
+
+<div class="chart-container" style="width: 100%; overflow-x: auto">
+    <canvas id="marketBasketChart" width="100%" height="50%"></canvas>
+          <div
+        id="networkGraph"
+        style="height: 600px; border: 1px solid lightgray"
+      ></div>
+
+      <!-- Tabla para mostrar los detalles -->
+      <table
+        id="rulesTable"
+        border="1"
+        style="width: 100%; margin-top: 20px; border-collapse: collapse"
+      >
+        <thead style="background-color: #f2f2f2">
+          <tr>
+            <th>#</th>
+            <th>Antecedents</th>
+            <th>Consequents</th>
+            <th>Lift</th>
+            <th>Confidence</th>
+            <th>Support</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+</div>
+
+<script>
+const data = {{ rules|tojson }};
+console.log(data);
+const fullLabels = data.map(
+            (d) => d.antecedents + " → " + d.consequents
+          );
+          const labels = data.map((d, i) => {
+            const ant = d.antecedents[0];
+            const cons = d.consequents[0];
+            return `${ant.trim()} → ${cons.trim()}`;
+          });
+
+          const liftValues = data.map((d) => d.lift);
+          const confidenceValues = data.map((d) => d.confidence);
+          const supportValues = data.map((d) => d.support);
+
+          const ctx = document
+            .getElementById("marketBasketChart")
+            .getContext("2d");
+
+          new Chart(ctx, {
+            type: "bar",
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: "Lift",
+                  data: liftValues,
+                  backgroundColor: "rgba(54, 162, 235, 0.6)", // Azul
+                  borderColor: "rgba(54, 162, 235, 1)",
+                  borderWidth: 1,
+                },
+                {
+                  label: "Confidence",
+                  data: confidenceValues,
+                  backgroundColor: "rgba(75, 192, 192, 0.6)", // Verde
+                  borderColor: "rgba(75, 192, 192, 1)",
+                  borderWidth: 1,
+                },
+                {
+                  label: "Support",
+                  data: supportValues,
+                  backgroundColor: "rgba(255, 159, 64, 0.6)", // Naranja
+                  borderColor: "rgba(255, 159, 64, 1)",
+                  borderWidth: 1,
+                },
+              ],
+            },
+            options: {
+              plugins: {
+                legend: { position: "top" },
+                tooltip: {
+                  callbacks: {
+                    title: (context) => fullLabels[context[0].dataIndex], // muestra regla completa
+                  },
+                },
+                title: {
+                  display: true,
+                  text: "Reglas de Asociación (Lift, Confidence y Support)",
+                },
+              },
+              scales: {
+                x: {
+                  ticks: {
+                    autoSkip: false, // evita que Chart.js salte etiquetas
+                    maxRotation: 90, // rota las etiquetas verticalmente
+                    minRotation: 60,
+                    font: { size: 10 },
+                    callback: function (value, index, ticks) {
+                      // corta los textos muy largos
+                      const label = this.getLabelForValue(value);
+                      return label.length > 30
+                        ? label.substr(0, 30) + "..."
+                        : label;
+                    },
+                  },
+                },
+                y: {
+                  beginAtZero: true,
+                  title: { display: true, text: "Valor" },
+                },
+              },
+            },
+          });
+
+        // Renderizar tabla
+          const tbody = document.querySelector("#rulesTable tbody");
+          data.forEach((d, i) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${i + 1}</td>
+              <td>${
+                Array.isArray(d.antecedents)
+                  ? d.antecedents.join(", ")
+                  : d.antecedents
+              }</td>
+              <td>${
+                Array.isArray(d.consequents)
+                  ? d.consequents.join(", ")
+                  : d.consequents
+              }</td>
+              <td>${d.lift.toFixed(3)}</td>
+              <td>${d.confidence.toFixed(3)}</td>
+              <td>${d.support.toFixed(3)}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+
+          // grafico nodos
+          const nodes = new Set();
+          const edges = [];
+
+          data.forEach((rule) => {
+            rule.antecedents.forEach((ant) => nodes.add(ant));
+            rule.consequents.forEach((cons) => nodes.add(cons));
+            rule.antecedents.forEach((ant) => {
+              rule.consequents.forEach((cons) => {
+                edges.push({
+                  from: ant,
+                  to: cons,
+                  value: rule.lift, // el peso del enlace
+                  title: `Confidence: ${rule.confidence.toFixed(
+                    3
+                  )} Lift: ${rule.lift.toFixed(2)}`,
+                });
+              });
+            });
+          });
+
+          const dataNetwork = {
+            nodes: Array.from(nodes).map((n) => ({ id: n, label: n })),
+            edges: edges,
+          };
+
+          const options = {
+            nodes: {
+              shape: "dot",
+              size: 20,
+              font: { size: 14 },
+            },
+            edges: {
+              arrows: { to: { enabled: true, scaleFactor: 0.5 } },
+              color: { color: "#848484", highlight: "#2B7CE9" },
+              smooth: false,
+            },
+            physics: {
+              enabled: true,
+              stabilization: false,
+            },
+          };
+
+          new vis.Network(
+            document.getElementById("networkGraph"),
+            dataNetwork,
+            options
+          );
+        
+</script>

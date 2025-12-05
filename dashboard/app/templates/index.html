@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Dashboard Bodega</title>
+  </head>
+  <body>
+    <h1>Dashboard</h1>
+    <button id="run">Run Apriori</button>
+    <button id="corr">Run Correlation</button>
+    <pre id="out"></pre>
+
+    <script>
+    document.getElementById('run').onclick = async ()=>{
+      const res = await fetch('/api/apriori_run');
+      const j = await res.json();
+      document.getElementById('out').innerText = JSON.stringify(j, null, 2);
+    }
+    document.getElementById('corr').onclick = async ()=>{
+      const res = await fetch('/api/correlacion');
+      // const j = await res.json();
+      // document.getElementById('out').innerText = JSON.stringify(j, null, 2);
+    }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+<h2>Ejecuciones Apriori</h2>
+<ul>
+    {% for r in runs %}
+      <li>
+        <a href="/apriori/{{ r.id }}">
+          Run #{{ r.id }} — {{ r.created_at }}
+        </a>
+      </li>
+    {% endfor %}
+</ul>
