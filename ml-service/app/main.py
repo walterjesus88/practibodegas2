@@ -86,8 +86,13 @@ def apriori_results():
     return {"latest": [dict(r) for r in res]}
 
 @app.get('/correlacion')
-def correlacion():
-    csv_path = os.getenv('NESTLE_CSV_PATH', '/data/Nestle.csv')
+def correlacion():  
+
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(BASE_DIR, "..", "data", "Nestle.csv")
+
+    #csv_path = os.getenv('NESTLE_CSV_PATH', 'data/Nestle.csv')
+
     logger.info("Entrando al endpoint /correlacion 🚀")
     logger.info(f"CSV path: {csv_path}")
     #print(csv_path)
