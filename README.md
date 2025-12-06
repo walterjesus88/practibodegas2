@@ -103,6 +103,8 @@ EXPOSE ${PORT}
 # Comando de ejecución usando PORT dinámico de Railway
 CMD ["sh", "-c", "gunicorn -k uvicorn.workers.UvicornWorker --workers 3 --timeout 120 --bind 0.0.0.0:${PORT} app.main:app"]
 
+######### En dashboard cambie 
+CMD ["/start.sh"] por CMD ["sh", "/start.sh"]
 
 
 
