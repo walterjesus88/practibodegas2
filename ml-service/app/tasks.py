@@ -8,14 +8,23 @@ from .models import Venta, Producto
 celery = Celery(__name__, broker=os.getenv('REDIS_URL'))
 
 @celery.task
-def task_run_apriori(min_support=0.01, min_confidence=0.3):
+def task_run_apriori(min_support=0.005, min_confidence=0.05):
     from .db import engine
     import sqlalchemy as sa
     from .models import Producto  # Asegurar import
     import pandas as pd
 
+    query = """
+        SELECT *
+        FROM ventas
+        ORDER BY fecha DESC
+        LIMIT 100000
+    """
+
     with engine.connect() as conn:
-        ventas_df = pd.read_sql_table('ventas', conn)
+        #ventas_df = pd.read_sql_table('ventas', conn)
+        ventas_df = pd.read_sql_query(query, conn)
+
         productos_df = pd.read_sql_table('productos', conn)
 
     # JOIN: agregar nombre del producto
@@ -27,6 +36,8 @@ def task_run_apriori(min_support=0.01, min_confidence=0.3):
 
     # Ahora ya existe ticket_id y producto 😄
     rules = run_apriori_from_df(df[['ticket_id', 'producto']], min_support, min_confidence)
+    print('print rules')
+    print(rules)
 
     session = SessionLocal()
     save_rules(session, rules, {'min_support': min_support, 'min_confidence': min_confidence})

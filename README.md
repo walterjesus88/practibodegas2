@@ -106,6 +106,25 @@ CMD ["sh", "-c", "gunicorn -k uvicorn.workers.UvicornWorker --workers 3 --timeou
 ######### En dashboard cambie 
 CMD ["/start.sh"] por CMD ["sh", "/start.sh"]
 
+### star comnad de mlservice 
+gunicorn -k uvicorn.workers.UvicornWorker --workers 3 --timeout 120 --bind 0.0.0.0:${PORT} app.main:app
 
+
+## start comand de dashboard 
+
+
+
+## cargar productos nuevos
+docker exec -it bodega_scaffold-mlservice-1 bash
+python -m scripts.cargar_data2
+
+## apriori ejecutar 60 ultimos dias
+query = """
+    SELECT *
+    FROM ventas
+    WHERE fecha >= NOW() - INTERVAL '60 days'
+    ORDER BY fecha DESC
+"""
+df = pd.read_sql_query(query, conn)
 
 
