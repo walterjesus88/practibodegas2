@@ -11,6 +11,17 @@ celery = Celery(
     backend=os.getenv('REDIS_URL')
 )
 
+
+# Esto es vital: Celery necesita registrar las tareas al iniciar
+# El nombre 'app.tasks' debe ser importable desde donde lances el worker
+celery.conf.imports = [
+    'app.tasks', 
+]
+
+# Opcional: Configuraciones adicionales
+celery.conf.task_ignore_result = False
+
+
 # Importar tareas explícitamente
 # try:
 #     import app.tasks
@@ -18,4 +29,4 @@ celery = Celery(
 # except Exception as e:
 #     print("Error importing tasks:", e)
 
-celery.autodiscover_tasks(['app'])
+#celery.autodiscover_tasks(['app'])

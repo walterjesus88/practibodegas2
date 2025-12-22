@@ -2,12 +2,16 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY worker/requirements.txt .
+
 RUN pip install --no-cache-dir -r requirements.txt
 
 
-COPY . .
+COPY ml-service/app/ ./app/
+COPY worker/celery_worker.py ./worker/
 
-ENV PYTHONPATH=/app
 
-CMD ["celery", "-A", "celery_worker.celery", "worker", "--loglevel=info"]
+ENV PYTHONPATH="/app"
+
+CMD ["celery", "-A", "worker.celery_worker.celery", "worker", "--loglevel=info"]
+
