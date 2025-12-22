@@ -15,9 +15,8 @@ def run_apriori_from_df(df: pd.DataFrame, min_support=0.002, min_confidence=0.05
     print(df)
 
     pivot = (df.assign(val=1)
-            .pivot_table(index='ticket_id', columns='producto', values='val', fill_value=0))
-            #.astype(bool))
-
+            .pivot_table(index='ticket_id', columns='producto', values='val', fill_value=0)
+            .astype(bool))
 
     print('pivottt')
     print(pivot)

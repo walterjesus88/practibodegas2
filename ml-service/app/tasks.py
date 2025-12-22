@@ -5,6 +5,7 @@ import pandas as pd
 from .db import SessionLocal
 from .apriori_service import run_apriori_from_df, save_rules
 from .models import Venta, Producto
+import gc
 
 celery = Celery(__name__, broker=os.getenv('REDIS_URL'))
 
@@ -26,7 +27,6 @@ def task_run_apriori(min_support=0.005, min_confidence=0.05):
     with engine.connect() as conn:
         #ventas_df = pd.read_sql_table('ventas', conn)
         ventas_df = pd.read_sql_query(query, conn)
-
         productos_df = pd.read_sql_table('productos', conn)
 
     # JOIN: agregar nombre del producto
@@ -34,12 +34,18 @@ def task_run_apriori(min_support=0.005, min_confidence=0.05):
     df = df.rename(columns={'nombre': 'producto'})
     
     print('dfffffff')
-    print(df)
+    #print(df)
 
     # Ahora ya existe ticket_id y producto 😄
     rules = run_apriori_from_df(df[['ticket_id', 'producto']], min_support, min_confidence)
     print('print rules')
     print(rules)
+
+    # ... después de crear el pivot_df y antes de llamar a apriori
+    del ventas_df  # Borra el dataframe original que ya no usas
+    del df
+    gc.collect()   # Fuerza la limpieza de basura
+
 
     session = SessionLocal()
     save_rules(session, rules, {'min_support': min_support, 'min_confidence': min_confidence})

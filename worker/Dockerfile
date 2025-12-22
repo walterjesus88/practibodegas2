@@ -15,3 +15,4 @@ ENV PYTHONPATH="/app"
 
 CMD ["celery", "-A", "worker.celery_worker.celery", "worker", "--loglevel=info"]
 
+
