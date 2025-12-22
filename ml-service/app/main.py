@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Depends, BackgroundTasks
 from .schemas import AprioriRun
-from .tasks import task_run_apriori, celery
+from .tasks import task_run_apriori#, celery
 from .apriori_service import run_apriori_from_df
 from .correlacion_service import run_correlation_from_csv
 from .db import SessionLocal, engine

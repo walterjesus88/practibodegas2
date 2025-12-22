@@ -1,3 +1,4 @@
+#from worker.celery_worker import Celery
 from celery import Celery
 import os
 import pandas as pd
@@ -7,6 +8,7 @@ from .models import Venta, Producto
 
 celery = Celery(__name__, broker=os.getenv('REDIS_URL'))
 
+#@shared_task
 @celery.task
 def task_run_apriori(min_support=0.005, min_confidence=0.05):
     from .db import engine
