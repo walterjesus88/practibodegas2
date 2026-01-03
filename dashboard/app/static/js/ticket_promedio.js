@@ -1,0 +1,1 @@
+new Chart(document.getElementById('chart-ticket-global'), {type:'line', data:{labels:['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'],datasets:[{label:'Ticket Promedio Global',data:[27,28,29,30,29,31,32],borderColor:'#9966ff',fill:false}]}});

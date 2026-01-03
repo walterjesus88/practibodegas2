@@ -13,7 +13,6 @@ class Producto(Base):
     nombre = Column(String(100), unique=True, nullable=False)
     categoria = Column(String(50))
     precio = Column(Float)
-
     ventas = relationship("Venta", back_populates="producto")
 
 

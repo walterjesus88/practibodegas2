@@ -47,8 +47,7 @@ def correlacion():
     #     [0.12, 0.25, 0.19, 0.12, 0.31, 0],
     #   ]
 
-    print('passooooooo')
-
+ 
     return render_template(
         'correlaciones.html',
         data=response["matrix"],
@@ -72,6 +71,17 @@ def apriori_rules(run_id):
     res = requests.get(f"{ML_URL}/apriori/runs/{run_id}/rules")
     rules = res.json()
     return render_template("apriori_rules.html", rules=rules)
+
+
+@app.route('/dashboard', methods=['GET'])
+def dashboard():
+
+    
+
+    return render_template('dash.html')
+
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.jinja_env.auto_reload = True
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)

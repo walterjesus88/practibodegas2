@@ -49,7 +49,6 @@ services:
     
     command: >
       sh -c "gunicorn -k uvicorn.workers.UvicornWorker --workers 3 --timeout 120 --bind 0.0.0.0:8001 --log-level info app.main:app"
-    
     ports:
       - "8001:8001"
 
@@ -77,11 +76,15 @@ services:
     environment:
       - PYTHONUNBUFFERED=1
       - GUNICORN_CMD_ARGS="--log-level debug"
-    command: >
-      sh -c "gunicorn --workers 3 --timeout 120 --bind 0.0.0.0:8000 app.run:app"
-         
+  
+    command: >    
+      sh -c "gunicorn --reload --workers 3 --timeout 300 --bind 0.0.0.0:8000 app.run:app"
+       
     ports:
       - "8000:8000"
+    volumes:
+      - ./dashboard:/dashboard
+    working_dir: /dashboard
 
 volumes:
   pgdata:

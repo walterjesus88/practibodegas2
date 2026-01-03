@@ -1,0 +1,169 @@
+<!doctype html>
+<link rel="stylesheet" href="../static/css/style.css">
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@3.0.1"></script>
+<style>
+    :root{--bg:#0f1724;--card:#0b1220;--muted:#94a3b8;--accent:#06b6d4;--glass:rgba(255,255,255,0.04)}
+    *{box-sizing:border-box;font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071029 0%, #081228 100%);color:#e6eef6}
+    .container{max-width:1100px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+    h1{font-size:20px;margin:0}
+    .sub{color:var(--muted);font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px}
+    .card{background:var(--card);padding:14px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6);border:1px solid rgba(255,255,255,0.03)}
+    .kpi{grid-column:span 3;padding:12px}
+    .kpi .value{font-size:20px;font-weight:700}
+    .kpi .title{color:var(--muted);font-size:12px}
+    .wide{grid-column:span 8}
+    .narrow{grid-column:span 4}
+    .table{width:100%;border-collapse:collapse;margin-top:10px}
+    .table th{font-size:12px;color:var(--muted);text-align:left;padding:8px}
+    .table td{padding:10px;border-top:1px solid rgba(255,255,255,0.03)}
+    .btn{background:var(--accent);color:#042028;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;font-weight:600}
+    .filters{display:flex;gap:8px;align-items:center}
+    .chip{background:var(--glass);padding:6px 8px;border-radius:999px;font-size:13px;color:var(--muted)}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.kpi{grid-column:span 6}.wide{grid-column:span 12}.narrow{grid-column:span 12}}
+  </style>
+
+<main class="container">
+
+  <header>
+    <div>
+      <h1>Dashboard Web - Tiendas de Conveniencia</h1>
+      <div class="sub">Demo interactivo | Datos simulados • Presentado por Walter Rivera</div>
+    </div>
+    <div class="filters">
+      <div class="chip">Tienda Jaerami</div>
+      <div class="chip">2 tiendas</div>
+      <a class="btn" href="/apriori" id="downloadBtn">Analisis Canasta</a>
+      <a class="btn" href="/api/correlacion" id="downloadBtn">Correlaciones</a>
+      <button class="btn" id="downloadBtn">Correlaciones</button>
+      <button class="btn" id="downloadBtn">Descargar PDF</button>
+    </div>
+  </header>
+
+  <section class="grid">
+    <!-- <header class="page-header">
+    <h1>ANALISIS INTELIGENTE</h1> 
+    </header> -->  
+  </section>
+
+  <section class="grid">
+    <!-- KPIs -->
+    <div class="card kpi">
+      <div class="title">Ventas Hoy</div>
+      <div class="value" id="kpi-sales">S/ 3,420</div>
+      <div class="sub">+8% vs ayer</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="title">Ticket Promedio</div>
+      <div class="value" id="kpi-ticket">S/ 12.40</div>
+      <div class="sub">Estable</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="title">Stock Crítico</div>
+      <div class="value" id="kpi-stock">6 productos</div>
+      <div class="sub">Alertas activas</div>
+    </div>
+
+    <div class="card kpi">
+      <div class="title">Tienda Top</div>
+      <div class="value" id="kpi-top">Miraflores</div>
+      <div class="sub">Ventas semanales</div>
+    </div>
+
+
+    <div class="card wide">
+      <h4>Grafica Pareto 80/20</h4>
+      <h3 id="pareto-info" style="text-align:center;"></h3>
+      <canvas id="chart-pareto"></canvas>
+    </div>
+
+    <div class="card narrow">
+      <h3 style="margin:0 0 8px 0">Top Productos (7 días)</h3>
+      <canvas id="chart-top-products" height="160"></canvas>
+    </div>
+
+    <!-- <div class="card wide">
+      <h3>Análisis Avanzado</h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <div class="chip">Rotación</div>
+        <div class="chip">Margen</div>
+        <div class="chip">Pareto</div>
+        <div class="chip">Ranking</div>
+        <div class="chip">Ticket Promedio</div>
+        <div class="chip">Forecast</div>
+      </div>
+    </div> -->
+
+    <div class="card wide">
+    <h4>Rotación de Inventario (Top 10)</h4>
+    <canvas id="chart-rotation"></canvas>
+    </div>
+
+    <div class="card narrow">
+      <h4>Margen por Producto (Top 5)</h4>
+      <canvas id="chart-margin"></canvas>
+    </div>
+
+    <div class="card wide">
+      <h3>Ticket Promedio</h3>
+      <canvas id="chart-ticket-global"></canvas>
+    </div>
+
+    <!-- <div class="card wide">
+    <h4>Grafica Pareto 80/20</h4>
+    <canvas id="chart-pareto2"></canvas>
+    </div> -->
+
+    <div class="card narrow">
+    <h4>Ranking de Tiendas (Mes)</h4>
+    <table class="table"><thead><tr><th>Tienda</th><th>Ventas</th><th>Pos</th></tr></thead><tbody id="ranking-body"></tbody></table>
+    </div>
+  </section>
+
+
+<!-- ANALISIS INTELIGENTE -->
+<!-- <section id="ai" class="page">
+  <header class="page-header">
+  <h1>Análisis Inteligente</h1>
+  <div class="controls">
+  <button id="simulate-ai" class="btn">Simular Datos</button>
+  </div>
+  </header>
+
+
+  <div class="grid">
+    <div class="card wide">
+    <h4>Matriz de Correlación</h4>
+    <div id="correlation-heatmap"></div>
+    </div>
+    <div class="card wide">
+      <h4>Detección de Anomalías (Ventas Diarias)</h4>
+      <canvas id="chart-anomalies"></canvas>
+    </div>
+    <div class="card wide">
+        <h4>Segmentación de Clientes (K-Means)</h4>
+        <canvas id="chart-clusters"></canvas>
+        <div style="margin-top:8px;color:#9aa6b2">Clusters: 3 • Variables: Frecuencia (x), Gasto promedio (y)</div>
+    </div>
+  </div>
+</section> -->
+</main>
+
+
+
+<script src="../static/js/main.js"></script>
+<script src="../static/js/charts.js"></script>
+<script src="../static/js/predictive.js"></script>
+<script src="../static/js/ai_analysis.js"></script>
+<script src="../static/js/ticket_promedio.js"></script>
+
+</body>
+</html>

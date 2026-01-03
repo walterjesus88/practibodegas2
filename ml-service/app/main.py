@@ -4,7 +4,7 @@ from .tasks import task_run_apriori#, celery
 #from .apriori_service import run_apriori_from_df
 from .correlacion_service import run_correlation_from_csv
 from .db import SessionLocal, engine
-from .models import Base, ReglaAprioriRun, ReglaAprioriRule
+from .models import Base, ReglaAprioriRun, ReglaAprioriRule, Producto, Venta
 import os
 # import logging
 # logger = logging.getLogger(__name__)
@@ -89,6 +89,7 @@ def apriori_results():
 def correlacion():  
 
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    print(BASE_DIR)
     csv_path = os.path.join(BASE_DIR, "..", "data", "Nestle.csv")
 
     #csv_path = os.getenv('NESTLE_CSV_PATH', 'data/Nestle.csv')
@@ -101,3 +102,10 @@ def correlacion():
     #print(data)
     #return data
     return {"matrix": matrix, "categories": categorias}  # temporalmente deshabilitado
+
+
+@app.get('/dashboard/pareto')
+def pareto_dashboard():
+    session = SessionLocal()    
+    products = session.query(Venta).all()
+   
