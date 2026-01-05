@@ -13,8 +13,8 @@ pages.forEach(p=>{ p.classList.toggle('active', p.id===t) });
 
 
 //document.getElementById('refresh-btn').addEventListener('click', ()=> location.reload());
-document.getElementById('simulate-ai').addEventListener('click', ()=> {
-// disparar recarga de datos simulados en ai_analysis
-if(window.aiSimulate) window.aiSimulate();
-})
+// document.getElementById('simulate-ai').addEventListener('click', ()=> {
+// // disparar recarga de datos simulados en ai_analysis
+// if(window.aiSimulate) window.aiSimulate();
+// })
 });

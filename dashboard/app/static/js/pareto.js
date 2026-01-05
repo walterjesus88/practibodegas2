@@ -13,18 +13,18 @@
 Chart.register(window['chartjs-plugin-annotation']);
 
 // ===== Datos simulados =====
-const products = [
-  {p:'Pan Bimbo', sold:420, inventory_avg:20, cost:2.5, price:5.0},
-  {p:'Agua 1L', sold:380, inventory_avg:30, cost:1.0, price:2.5},
-  {p:'Café', sold:335, inventory_avg:15, cost:0.6, price:2.0},
-  {p:'Galletas', sold:280, inventory_avg:25, cost:1.2, price:3.0},
-  {p:'Cigarrillos', sold:220, inventory_avg:40, cost:2.0, price:6.0},
-  {p:'Chocolates', sold:150, inventory_avg:12, cost:1.0, price:2.8},
-  {p:'Yogurt', sold:90, inventory_avg:8, cost:0.9, price:2.2},
-  {p:'Leche', sold:210, inventory_avg:22, cost:2.0, price:4.0},
-  {p:'Snack', sold:160, inventory_avg:18, cost:0.8, price:2.5},
-  {p:'Jugo', sold:130, inventory_avg:14, cost:1.0, price:2.2}
-];
+// const products = [
+//   {p:'Pan Bimbo', sold:420, inventory_avg:20, cost:2.5, price:5.0},
+//   {p:'Agua 1L', sold:380, inventory_avg:30, cost:1.0, price:2.5},
+//   {p:'Café', sold:335, inventory_avg:15, cost:0.6, price:2.0},
+//   {p:'Galletas', sold:280, inventory_avg:25, cost:1.2, price:3.0},
+//   {p:'Cigarrillos', sold:220, inventory_avg:40, cost:2.0, price:6.0},
+//   {p:'Chocolates', sold:150, inventory_avg:12, cost:1.0, price:2.8},
+//   {p:'Yogurt', sold:90, inventory_avg:8, cost:0.9, price:2.2},
+//   {p:'Leche', sold:210, inventory_avg:22, cost:2.0, price:4.0},
+//   {p:'Snack', sold:160, inventory_avg:18, cost:0.8, price:2.5},
+//   {p:'Jugo', sold:130, inventory_avg:14, cost:1.0, price:2.2}
+// ];
 
 
 // Pareto
