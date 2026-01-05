@@ -1,10 +1,78 @@
-<h2>Ejecuciones Apriori</h2>
-<ul>
-    {% for r in runs %}
-      <li>
-        <a href="/apriori/{{ r.id }}">
-          Run #{{ r.id }} — {{ r.created_at }}
-        </a>
-      </li>
-    {% endfor %}
-</ul>
+<!doctype html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Historial de ejecuciones de análisis Apriori">
+    <title>Ejecuciones Apriori - Bodega Analytics</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="page-header">
+            <div>
+                <h1>📊 Ejecuciones Apriori</h1>
+                <div class="sub">Historial de análisis de canasta de compras</div>
+            </div>
+            <div class="controls">
+                <a class="btn" href="/dashboard" aria-label="Volver al dashboard principal">
+                    ← Volver al Dashboard
+                </a>
+                <a class="btn btn-secondary" href="/" aria-label="Ir a página de inicio">
+                    🏠 Inicio
+                </a>
+            </div>
+        </header>
+
+        <section class="grid">
+            <div class="card wide">
+                <h4>Ejecuciones Recientes</h4>
+                {% if runs %}
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Fecha de Ejecución</th>
+                                <th>Parámetros</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for r in runs %}
+                            <tr>
+                                <td><span class="chip primary">#{{ r.id }}</span></td>
+                                <td>{{ r.created_at }}</td>
+                                <td>
+                                    <div class="filters">
+                                        {% if r.params.min_support %}
+                                            <span class="chip">Support: {{ r.params.min_support }}</span>
+                                        {% endif %}
+                                        {% if r.params.min_confidence %}
+                                            <span class="chip">Confidence: {{ r.params.min_confidence }}</span>
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm" href="/apriori/{{ r.id }}" aria-label="Ver reglas de ejecución {{ r.id }}">
+                                        👁 Ver Reglas
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <div class="alert info">
+                        <div class="alert-title">ℹ️ No hay ejecuciones registradas</div>
+                        <p>Aún no se han ejecutado análisis Apriori. Ve al dashboard para iniciar una nueva ejecución.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Bodega Analytics - Sistema de Análisis de Canasta de Compras</p>
+        </footer>
+    </main>
+</body>
+</html>

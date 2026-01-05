@@ -1,26 +1,122 @@
 <!doctype html>
-<html>
-  <head>
+<html lang="es">
+<head>
     <meta charset="utf-8">
-    <title>Dashboard Bodega</title>
-  </head>
-  <body>
-    <h1>Dashboard</h1>
-    <button id="run">Run Apriori</button>
-    <button id="corr">Run Correlation</button>
-    <pre id="out"></pre>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard Bodega - Sistema de análisis de ventas">
+    <title>Bodega Dashboard</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <main class="container">
+        <header class="page-header">
+            <div>
+                <h1>🏪 Bodega Dashboard</h1>
+                <div class="sub">Sistema de análisis de ventas y comportamiento de compra</div>
+            </div>
+        </header>
+
+        <section class="grid">
+            <div class="card kpi">
+                <div class="kpi-title">Acciones Rápidas</div>
+                <div class="kpi-sub">Ejecutar análisis</div>
+            </div>
+
+            <div class="card wide">
+                <h4>Ejecutar Análisis Apriori</h4>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    El análisis Apriori permite descubrir patrones de compra frecuentes entre productos.
+                    Se ejecutará con los parámetros por defecto: Support: 0.02, Confidence: 0.3
+                </p>
+                <div class="controls">
+                    <button id="run" class="btn">
+                        🚀 Ejecutar Apriori
+                    </button>
+                    <a class="btn btn-secondary" href="/apriori">
+                        👁 Ver Ejecuciones
+                    </a>
+                </div>
+                <pre id="out" style="
+                    background: var(--bg-tertiary);
+                    padding: var(--spacing-md);
+                    border-radius: var(--radius-md);
+                    margin-top: var(--spacing-md);
+                    overflow-x: auto;
+                    max-height: 300px;
+                    display: none;
+                "></pre>
+            </div>
+
+            <div class="card wide">
+                <h4>Ver Análisis de Correlaciones</h4>
+                <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+                    Visualiza las correlaciones entre diferentes productos mediante un gráfico interactivo.
+                </p>
+                <div class="controls">
+                    <button id="corr" class="btn">
+                        🔗 Ver Correlaciones
+                    </button>
+                </div>
+            </div>
+
+            <div class="card wide">
+                <h4>Navegación Rápida</h4>
+                <div class="filters" style="flex-wrap: wrap;">
+                    <a class="btn btn-primary" href="/dashboard">
+                        📊 Dashboard Principal
+                    </a>
+                    <a class="btn btn-secondary" href="/apriori">
+                        🔍 Análisis de Canasta
+                    </a>
+                    <a class="btn btn-secondary" href="/api/correlacion">
+                        🌐 Correlaciones
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            <p>© 2025 Bodega Analytics - Sistema de Análisis de Ventas</p>
+        </footer>
+    </main>
 
     <script>
-    document.getElementById('run').onclick = async ()=>{
-      const res = await fetch('/api/apriori_run');
-      const j = await res.json();
-      document.getElementById('out').innerText = JSON.stringify(j, null, 2);
-    }
-    document.getElementById('corr').onclick = async ()=>{
-      const res = await fetch('/api/correlacion');
-      // const j = await res.json();
-      // document.getElementById('out').innerText = JSON.stringify(j, null, 2);
-    }
+        document.getElementById('run').onclick = async () => {
+            const out = document.getElementById('out');
+            const btn = document.getElementById('run');
+
+            btn.disabled = true;
+            btn.innerHTML = '⏳ Ejecutando...';
+            out.style.display = 'block';
+            out.innerHTML = '<div class="loading-spinner" style="margin: var(--spacing-md) auto;"></div>';
+
+            try {
+                const res = await fetch('/api/apriori_run');
+                const j = await res.json();
+                out.innerHTML = JSON.stringify(j, null, 2);
+                out.style.display = 'block';
+
+                if (j.task_id) {
+                    out.innerHTML += '\n\n<div class="alert success" style="margin-top: var(--spacing-md);">\n' +
+                        '<div class="alert-title">✅ Tarea iniciada correctamente</div>\n' +
+                        `<p>Task ID: ${j.task_id}</p>\n` +
+                        '<p>La tarea se está ejecutando en segundo plano. Ve a la sección "Ejecuciones" para ver los resultados.</p>\n' +
+                        '</div>';
+                }
+            } catch (error) {
+                out.innerHTML = '<div class="alert danger">\n' +
+                    '<div class="alert-title">❌ Error al ejecutar Apriori</div>\n' +
+                    `<p>${error.message}</p>\n` +
+                    '</div>';
+            }
+
+            btn.disabled = false;
+            btn.innerHTML = '🚀 Ejecutar Apriori';
+        };
+
+        document.getElementById('corr').onclick = () => {
+            window.location.href = '/api/correlacion';
+        };
     </script>
-  </body>
+</body>
 </html>
