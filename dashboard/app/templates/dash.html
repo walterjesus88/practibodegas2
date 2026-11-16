@@ -51,7 +51,7 @@
                 <div class="kpi-sub">Ventas semanales</div>
             </div>
 
-            <div class="card wide">
+            <div class="card kpi-full ">
                 <h4>Grafica Pareto 80/20</h4>
                 <h3 id="pareto-info" class="text-center"></h3>
                 <canvas id="chart-pareto"></canvas>
@@ -63,7 +63,7 @@
             </div>
 
             <div class="card wide">
-                <h4>Rotación de Inventario (Top 10)</h4>
+                <h4>Rotación de Inventario </h4>
                 <canvas id="chart-rotation"></canvas>
             </div>
 
@@ -97,12 +97,31 @@
         </footer>
     </main>
 
+    <script type="application/json" id="pareto-data">
+        {{ datapareto | tojson }}
+    </script>
+    <script type="application/json" id="rotacion-data">
+        {{ datarotacion | tojson }}
+    </script>
+
+    <script type="application/json" id="ticket-promedio-data">
+        {{ dataticket_promedio | tojson }}
+    </script>
+
+
+
+    <script src="{{ url_for('static', filename='js/pareto.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/rotacion.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/charts.js') }}"></script>
+
     <script src="../static/js/main.js"></script>
-    <script src="../static/js/charts.js"></script>
+
     <script src="../static/js/predictive.js"></script>
     <script src="../static/js/ai_analysis.js"></script>
     <script src="../static/js/ticket_promedio.js"></script>
     <script src="../static/js/mobile-menu.js"></script>
-    <script src="../static/js/pareto.js"></script>
+   
+
+
 </body>
 </html>

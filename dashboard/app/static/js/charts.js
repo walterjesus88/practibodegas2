@@ -13,7 +13,7 @@ ranking:[{store:'Miraflores',sales:3420},{store:'San Isidro',sales:3100},{store:
 Chart.register(window['chartjs-plugin-annotation']);
 
 // ===== Datos simulados =====
-const products = [
+const productso = [
   {p:'Pan Bimbo', sold:420, inventory_avg:20, cost:2.5, price:5.0},
   {p:'Agua 1L', sold:380, inventory_avg:30, cost:1.0, price:2.5},
   {p:'Café', sold:335, inventory_avg:15, cost:0.6, price:2.0},
@@ -29,14 +29,14 @@ const products = [
 
 
 
-// Rotación
-const rotLabels = products.map(x=>x.p);
-const rotData = products.map(x=>(x.sold/x.inventory_avg).toFixed(2));
-new Chart(document.getElementById('chart-rotation'), {type:'bar', data:{labels:rotLabels,datasets:[{label:'Rotación',data:rotData,backgroundColor:'#36a2eb'}]}, options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
+// // Rotación
+// const rotLabels = products.map(x=>x.p);
+// const rotData = products.map(x=>(x.sold/x.inventory_avg).toFixed(2));
+// new Chart(document.getElementById('chart-rotation'), {type:'bar', data:{labels:rotLabels,datasets:[{label:'Rotación',data:rotData,backgroundColor:'#36a2eb'}]}, options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}});
 
 // Margen
-const marginLabels = products.slice(0,5).map(x=>x.p);
-const marginData = products.slice(0,5).map(x=>(((x.price-x.cost)/x.price)*100).toFixed(1));
+const marginLabels = productso.slice(0,5).map(x=>x.p);
+const marginData = productso.slice(0,5).map(x=>(((x.price-x.cost)/x.price)*100).toFixed(1));
 new Chart(document.getElementById('chart-margin'), {type:'bar', data:{labels:marginLabels,datasets:[{label:'Margen %',data:marginData,backgroundColor:'#ffce56'}]}, options:{indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{beginAtZero:true}}}});
 
 

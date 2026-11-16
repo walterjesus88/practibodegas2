@@ -27,6 +27,23 @@ Chart.register(window['chartjs-plugin-annotation']);
 // ];
 
 
+
+const dataElement = document.getElementById("pareto-data");
+if (!dataElement) {
+    console.error("No se encontró pareto-data");
+}
+
+const products = JSON.parse(dataElement.textContent);
+console.log(products)
+
+
+// productos viene del JSON embebido
+const paretoLabels = products.map(p => p.producto);
+const paretoVals = products.map(p => p.total_ventas);
+const cumulativePercent = products.map(p => p.porcentaje_acumulado);
+
+
+
 // Pareto
 //ordenar por ventas descendente
 const paretoProducts = products.slice().sort((a,b)=>b.sold-a.sold);
