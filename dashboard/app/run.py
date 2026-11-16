@@ -74,11 +74,35 @@ def apriori_rules(run_id):
 
 
 @app.route('/dashboard', methods=['GET'])
-def dashboard():
+def dashboard():  
+    pareto = requests.get(f"{ML_URL}/pareto").json()
+    rotacion = requests.get(f"{ML_URL}/rotacion").json()
+    ticket_promedio = requests.get(f"{ML_URL}/ticket_promedio").json()
 
-    
+    return render_template(
+        "dash.html",
+        datapareto=pareto,
+        datarotacion=rotacion,
+        dataticket_promedio=ticket_promedio
+    )
+   
+@app.route('/api/pareto', methods=['GET'])
+def pareto(): 
+    res = requests.get(f"{ML_URL}/pareto")
+    return jsonify(res.json())
 
-    return render_template('dash.html')
+
+@app.route('/api/rotacion', methods=['GET'])
+def rotacion(): 
+    res = requests.get(f"{ML_URL}/rotacion")
+    return jsonify(res.json())
+
+
+@app.route('/api/ticket_promedio', methods=['GET'])
+def ticket_promedio(): 
+    res = requests.get(f"{ML_URL}/ticket_promedio")
+    return jsonify(res.json())
+
 
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.jinja_env.auto_reload = True
